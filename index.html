@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Logic Pages — nested logic gate puzzles inspired by Computer Engineering for Babies." />
+  <title>Logic Pages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/game.css?v=truth-progress1" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <h1>Logic Pages</h1>
+      </div>
+      <div style="display:flex; gap:0.5rem; align-items:center; flex-wrap:wrap;">
+        <button type="button" class="page-chip" id="page-chip" aria-haspopup="dialog" aria-controls="course-modal" title="Courses">
+          Logic Pages
+        </button>
+        <button type="button" class="icon-btn" id="btn-settings" aria-label="Sensory settings">
+          <span aria-hidden="true">⚙</span><span class="label">Settings</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="screen active" id="screen-home" aria-label="Home">
+      <div class="hero-card">
+        <p class="eyebrow">Primer · Nest · Memory · Capstone · Machines</p>
+        <h2>Press buttons. Watch the rule.</h2>
+        <p>
+          Start with one gate. Then nest them — a mid-wire from one gate becomes
+          an input to the next. Simple pieces. Deeper chains.
+        </p>
+        <div class="cta-row">
+          <button type="button" class="btn-primary" id="btn-start">Start Primer</button>
+          <button type="button" class="btn-secondary" id="btn-resume">Continue</button>
+        </div>
+      </div>
+      <div id="tracks" class="tracks" aria-label="Course tracks"></div>
+    </section>
+
+    <section class="screen" id="screen-play" aria-label="Puzzle page">
+      <div class="play-layout">
+        <div class="board-shell">
+          <div class="board" id="board" role="application" aria-label="Logic circuit">
+            <div class="board-stage" id="board-stage">
+              <svg id="circuit" viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid meet"></svg>
+              <div id="inputs" class="inputs"></div>
+            </div>
+            <p class="board-status" id="board-status" aria-live="polite">IN=0 · OUT=0</p>
+            <div class="page-title-mark" id="title-mark">???</div>
+            <p class="board-blurb" id="board-blurb"></p>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <h2 id="side-title">Find the rule</h2>
+          <div class="goal" id="side-goal">Press the buttons.</div>
+          <div class="truth" id="side-truth" aria-label="Truth table"></div>
+          <p class="hint" id="side-hint" aria-live="polite"></p>
+          <button type="button" class="btn-secondary" id="btn-parent" style="justify-self:start;">Parent note</button>
+        </aside>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-complete" aria-label="Finished">
+      <div class="hero-card">
+        <p class="eyebrow">Course</p>
+        <h2>You climbed the ladder.</h2>
+        <p>
+          Wires carry on and off. Nested gates build bigger rules. Latches remember.
+          Full adders, decoders, and ALU slices are those pieces composed.
+        </p>
+        <div class="cta-row">
+          <button type="button" class="btn-primary" id="btn-replay">Play again</button>
+          <button type="button" class="btn-secondary" id="btn-home">Home</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="nav-group" id="play-nav" hidden>
+        <button type="button" class="icon-btn" id="btn-prev" aria-label="Previous page">
+          <span aria-hidden="true">←</span><span class="label">Prev</span>
+        </button>
+        <button type="button" class="icon-btn" id="btn-next" aria-label="Next page">
+          <span class="label">Next</span><span aria-hidden="true">→</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal-backdrop" id="course-modal" aria-hidden="true" role="dialog" aria-labelledby="course-title">
+    <div class="modal course-modal">
+      <h2 id="course-title">Courses</h2>
+      <p class="course-lead">Jump home or open any unlocked page.</p>
+      <button type="button" class="btn-primary" id="course-home">Back home</button>
+      <div id="course-tracks" class="course-tracks"></div>
+      <button type="button" class="btn-secondary" data-close>Close</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="settings-modal" aria-hidden="true" role="dialog" aria-labelledby="settings-title">
+    <div class="modal">
+      <h2 id="settings-title">Sensory settings</h2>
+      <div class="setting-row">
+        <label for="set-sound">Soft click sounds</label>
+        <label class="switch"><input type="checkbox" id="set-sound" /><span></span></label>
+      </div>
+      <div class="setting-row">
+        <label for="set-toggle">Toggle buttons (instead of hold)</label>
+        <label class="switch"><input type="checkbox" id="set-toggle" /><span></span></label>
+      </div>
+      <div class="setting-row">
+        <label for="set-contrast">Higher contrast</label>
+        <label class="switch"><input type="checkbox" id="set-contrast" /><span></span></label>
+      </div>
+      <div class="setting-row">
+        <label for="set-motion">Reduce motion</label>
+        <label class="switch"><input type="checkbox" id="set-motion" /><span></span></label>
+      </div>
+      <button type="button" class="btn-primary" data-close>Done</button>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="parent-modal" aria-hidden="true" role="dialog" aria-labelledby="parent-title">
+    <div class="modal">
+      <h2 id="parent-title">Parent note · <span id="parent-gate">WIRE</span></h2>
+      <div id="parent-gate-form">
+        <p style="margin:0; color:var(--ink-soft);">Grown-ups only — answer to unlock the note.</p>
+        <p id="parent-q" style="margin:0.5rem 0; font-weight:600;"></p>
+        <input id="parent-a" type="text" inputmode="numeric" autocomplete="off" aria-label="Answer"
+          style="width:100%; min-height:48px; border-radius:12px; border:1px solid var(--line); padding:0.6rem 0.8rem; font:inherit;" />
+        <p id="parent-err" style="margin:0.4rem 0 0; color:#8a3b30; min-height:1.2em;"></p>
+        <div class="cta-row" style="margin-top:0.75rem;">
+          <button type="button" class="btn-primary" id="parent-unlock">Unlock</button>
+          <button type="button" class="btn-secondary" data-close>Cancel</button>
+        </div>
+      </div>
+      <div id="parent-note" hidden>
+        <div class="parent-copy" id="parent-body"></div>
+        <button type="button" class="btn-primary" data-close style="margin-top:0.75rem;">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/draw.js?v=pink-rainbow2"></script>
+  <script src="js/curriculum.js?v=tracke-wires5"></script>
+  <script src="js/game.js?v=truth-progress1"></script>
+</body>
+</html>

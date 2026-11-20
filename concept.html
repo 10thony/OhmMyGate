@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logic Pages — Concept Brief</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      /* Role-based tokens (Carbon-style) — values tuned for low-stim board-book feel */
+      --bg: #e7efe9;
+      --bg-deep: #d5e3da;
+      --surface: #f4f8f5;
+      --surface-raised: #fbfdfb;
+      --ink: #1a2f2c;
+      --ink-soft: #3d5550;
+      --muted: #5f736d;
+      --line: #b7c9c0;
+      --line-strong: #7f968c;
+      --accent: #2f6b62;
+      --accent-soft: #c5ddd6;
+      --signal: #3f8f5a;
+      --signal-soft: #d5ead9;
+      --btn-a: #b85a4a;
+      --btn-a-soft: #f0d5cf;
+      --btn-b: #c9a24a;
+      --btn-b-soft: #f3e6c4;
+      --warn: #8a6a2a;
+      --radius: 18px;
+      --shadow: 0 1px 0 rgba(26, 47, 44, 0.06), 0 12px 28px rgba(26, 47, 44, 0.06);
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+      --measure: 68ch;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, rgba(197, 221, 214, 0.55), transparent 42%),
+        radial-gradient(circle at 88% 12%, rgba(213, 234, 217, 0.45), transparent 38%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* subtle PCB grid — low contrast decoration */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2.5rem 0 4rem;
+    }
+
+    header.hero {
+      display: grid;
+      gap: 1.25rem;
+      padding: 2rem 0 2.5rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 2.5rem;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--signal);
+      box-shadow: 0 0 0 4px var(--signal-soft);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 650;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin: 0;
+      max-width: 16ch;
+    }
+
+    .lede {
+      max-width: var(--measure);
+      color: var(--ink-soft);
+      font-size: 1.15rem;
+      margin: 0;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    nav.toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin: 0 0 2.75rem;
+    }
+
+    nav.toc a {
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.9rem 1rem;
+      box-shadow: var(--shadow);
+      transition: border-color 160ms ease, transform 160ms ease;
+    }
+
+    nav.toc a:hover,
+    nav.toc a:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    nav.toc a span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 1.5rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3vw, 2rem);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.015em;
+    }
+
+    h3 {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+
+    p { max-width: var(--measure); color: var(--ink-soft); }
+
+    .panel {
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      box-shadow: var(--shadow);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .concept-card strong {
+      display: block;
+      font-size: 1.05rem;
+      color: var(--ink);
+      margin-bottom: 0.35rem;
+    }
+
+    .concept-card p { margin: 0; font-size: 0.98rem; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--accent-soft);
+      color: var(--ink);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    code, .mono {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+    }
+
+    .truth {
+      display: inline-grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 0.35rem 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+    }
+
+    .truth b { color: var(--accent); }
+
+    .puzzle {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .puzzle-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 8px;
+      background: var(--btn-b-soft);
+      color: var(--warn);
+      border: 1px solid #e2d0a0;
+    }
+
+    .tag.hard {
+      background: var(--btn-a-soft);
+      color: #7a3a30;
+      border-color: #e0b5ac;
+    }
+
+    .tag.easy {
+      background: var(--signal-soft);
+      color: #2d6a42;
+      border-color: #b7d7be;
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .swatch {
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .swatch .chip-color {
+      height: 64px;
+    }
+
+    .swatch figcaption {
+      padding: 0.55rem 0.7rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .swatch .name { font-weight: 600; color: var(--ink); display: block; }
+    .swatch .hex {
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .do-dont {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .do, .dont {
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+      border: 1px solid var(--line);
+    }
+
+    .do { background: var(--signal-soft); }
+    .dont { background: var(--btn-a-soft); }
+
+    .do h3, .dont h3 { margin-top: 0; }
+    .do ul, .dont ul { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--ink-soft); }
+    .do li, .dont li { margin: 0.35rem 0; }
+
+    .mock {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 800px) {
+      .mock { grid-template-columns: 1fr; }
+    }
+
+    .board {
+      position: relative;
+      min-height: 280px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.5), transparent 40%),
+        repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(183,201,192,0.35) 24px),
+        repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(183,201,192,0.35) 24px),
+        var(--bg);
+      padding: 1.25rem;
+      overflow: hidden;
+    }
+
+    .wire {
+      position: absolute;
+      background: var(--line-strong);
+      border-radius: 3px;
+      transition: background 200ms ease;
+    }
+
+    .wire.on { background: var(--signal); }
+
+    .gate {
+      position: absolute;
+      left: 42%;
+      top: 38%;
+      width: 86px;
+      height: 64px;
+      border: 2px solid var(--ink);
+      border-radius: 8px 28px 28px 8px;
+      background: var(--surface-raised);
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .btn-demo {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid rgba(26,47,44,0.25);
+      cursor: pointer;
+      box-shadow: inset 0 -4px 0 rgba(0,0,0,0.12);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .btn-demo:active { transform: translateY(2px); box-shadow: inset 0 -1px 0 rgba(0,0,0,0.12); }
+    .btn-demo.red { background: var(--btn-a); left: 12%; top: 18%; }
+    .btn-demo.yellow { background: var(--btn-b); left: 12%; top: 58%; }
+    .btn-demo[aria-pressed="true"] {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+    }
+
+    .led {
+      position: absolute;
+      right: 14%;
+      top: 42%;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #9aa89f;
+      border: 2px solid var(--ink);
+      transition: background 180ms ease, box-shadow 180ms ease;
+    }
+
+    .led.on {
+      background: var(--signal);
+      box-shadow: 0 0 0 6px var(--signal-soft);
+    }
+
+    .label-xor {
+      position: absolute;
+      right: 10%;
+      bottom: 12%;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+
+    .sources a {
+      color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 1.5rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      padding: 0.75rem 1rem;
+      background: var(--accent-soft);
+      border-radius: 0 12px 12px 0;
+      max-width: none;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">Working title · Logic Pages</div>
+      <h1>Computer Engineering for Babies — interactive web game concept</h1>
+      <p class="lede">
+        A page-by-page logic playground: press buttons, watch wires carry signal,
+        light an LED only when the gate rule is true. Same physical honesty as
+        Chase Roberts’ board book — adapted into paced puzzles for the browser.
+      </p>
+      <div class="meta-row">
+        <span class="chip">Ages ~3–10 + curious adults</span>
+        <span class="chip">Core loop: press → signal → rule → light</span>
+        <span class="chip">Low-stim by default</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Sections">
+      <a href="#concepts"><span>01</span>High-level concepts</a>
+      <a href="#puzzles"><span>02</span>Mid-level puzzles</a>
+      <a href="#ui"><span>03</span>Low-stim UI style</a>
+      <a href="#sources"><span>04</span>Style sources</a>
+    </nav>
+
+    <!-- ===================== CONCEPTS ===================== -->
+    <section id="concepts">
+      <h2>High-level concepts</h2>
+      <p class="callout">
+        Computers are on/off signals. Gates are rules for combining those signals.
+        The game never “explains programming” abstractly — it lets the player
+        <em>feel</em> the rule through buttons, wires, and a light.
+      </p>
+
+      <div class="grid-3" style="margin-top: 1.25rem;">
+        <article class="panel concept-card">
+          <strong>One page = one idea</strong>
+          <p>Each level mirrors a book page: one gate, one LED color, one rule. No side quests on the same screen.</p>
+        </article>
+        <article class="panel concept-card">
+          <strong>Signal is visible</strong>
+          <p>Wires change state when “hot.” The player sees electricity as a path, not a score popup.</p>
+        </article>
+        <article class="panel concept-card">
+          <strong>Discovery before labels</strong>
+          <p>Try buttons first. Truth tables and gate names appear after the light behavior is found (parent mode can reverse this).</p>
+        </article>
+        <article class="panel concept-card">
+          <strong>Compose later</strong>
+          <p>Early levels are atomic gates. Later levels wire gates together (book LATCH = memory from prior symbols).</p>
+        </article>
+        <article class="panel concept-card">
+          <strong>Joint play</strong>
+          <p>Per Google’s kids guidance: a parent panel with plain-language “why this matters” and real-world examples, gated for adults.</p>
+        </article>
+        <article class="panel concept-card">
+          <strong>No fail state</strong>
+          <p>Wrong presses just keep the LED off. Soft visual hints after idle time — never red X / timer pressure.</p>
+        </article>
+      </div>
+
+      <h3>Progression spine (from the book, then web-only)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Stage</th>
+            <th>Gate / idea</th>
+            <th>Player goal</th>
+            <th>Truth (inputs → LED)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="mono">01</span> Wire</td>
+            <td>Pass-through</td>
+            <td>Hold button → light on</td>
+            <td><span class="truth"><span>1</span><span>→</span><b>ON</b><span>0</span><span>→</span>off</span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">02</span> NOT</td>
+            <td>Inverter</td>
+            <td>Light on when button is <em>not</em> pressed</td>
+            <td><span class="truth"><span>0</span><span>→</span><b>ON</b><span>1</span><span>→</span>off</span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">03</span> OR</td>
+            <td>Either</td>
+            <td>Any button lights the LED</td>
+            <td><span class="truth"><span>A∨B</span><span>→</span><b>ON</b></span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">04</span> AND</td>
+            <td>Both</td>
+            <td>Both buttons together</td>
+            <td><span class="truth"><span>A∧B</span><span>→</span><b>ON</b></span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">05</span> XOR</td>
+            <td>Exactly one</td>
+            <td>One button, not both</td>
+            <td><span class="truth"><span>A⊕B</span><span>→</span><b>ON</b></span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">06</span> LATCH</td>
+            <td>Memory (SR)</td>
+            <td>SET stays lit; RESET clears</td>
+            <td><span class="truth"><span>Set</span><span>→</span><b>hold</b><span>Rst</span><span>→</span>clear</span></td>
+          </tr>
+          <tr>
+            <td><span class="mono">07+</span> Web</td>
+            <td>NAND / NOR / mux / half-adder</td>
+            <td>Compose known gates into new behaviors</td>
+            <td><span class="truth"><span>build</span><span>→</span><b>prove</b></span></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===================== PUZZLES ===================== -->
+    <section id="puzzles">
+      <h2>Mid-level puzzles &amp; interactions</h2>
+      <p>
+        Each interaction stays tactile: large buttons, hold or toggle modes,
+        and a single LED win condition. Complexity grows by adding wires and
+        gates — not by adding UI chrome.
+      </p>
+
+      <div class="grid-2" style="margin-top: 1.25rem;">
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Press &amp; Hold Wire</h3>
+            <span class="tag easy">Tutorial</span>
+          </div>
+          <p>Button depressed = high. LED follows while held. Teaches “signal is momentary unless something remembers it.”</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Broken Wire</h3>
+            <span class="tag">Interaction</span>
+          </div>
+          <p>A gap in the trace. Player drags a jumper segment to complete the path (single finger drag — Google kids: no multi-gesture).</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Find the Rule</h3>
+            <span class="tag">Discovery</span>
+          </div>
+          <p>Gate symbol is blank. Player experiments until LED matches a hidden truth table; then the symbol fades in.</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">XOR Door</h3>
+            <span class="tag">Puzzle</span>
+          </div>
+          <p>“Door unlocks only if exactly one switch is on.” Two buttons, one LED lock. Fail = both on / both off (door stays shut, no penalty).</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">AND Handshake</h3>
+            <span class="tag">Co-op</span>
+          </div>
+          <p>Two players (or two hands) must hold both buttons. Optional: buttons on opposite sides of the screen for joint engagement.</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">NOT Night-Light</h3>
+            <span class="tag">Metaphor</span>
+          </div>
+          <p>Pressing “day” turns the light off; releasing turns it on. Parent note: motion sensor lights, active-low logic.</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Latch Alarm</h3>
+            <span class="tag hard">Memory</span>
+          </div>
+          <p>SET rings a calm LED “alarm” that stays on after release. RESET clears. Introduces state without words like “flip-flop.”</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Build a Latch</h3>
+            <span class="tag hard">Compose</span>
+          </div>
+          <p>Drag NOT / AND / OR tiles onto a board until SET/RESET behavior matches the target. Same composition idea as the book’s final page.</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Half-Adder Spark</h3>
+            <span class="tag hard">Web-only</span>
+          </div>
+          <p>Two bits in → Sum (XOR) + Carry (AND). Two LEDs. First time the player sees a gate family compute something “math-like.”</p>
+        </article>
+
+        <article class="panel puzzle">
+          <div class="puzzle-head">
+            <h3 style="margin:0">Mystery Bus</h3>
+            <span class="tag">Sandbox</span>
+          </div>
+          <p>Free play board: place buttons, gates, LEDs. No goal. Save a “page” to share. Sandbox unlocked after Latch.</p>
+        </article>
+      </div>
+
+      <h3>Interaction grammar (keep tiny)</h3>
+      <div class="panel">
+        <ul>
+          <li><strong>Tap / hold</strong> buttons (primary).</li>
+          <li><strong>Drag</strong> one wire segment or one gate tile (secondary).</li>
+          <li><strong>Page turn</strong> (prev / next always visible — icons + short labels).</li>
+          <li><strong>Never:</strong> pinch, double-tap chains, timed challenges, autoplay audio.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===================== UI ===================== -->
+    <section id="ui">
+      <h2>Low-stim UI style</h2>
+      <p>
+        Style is not “cute chaos.” It is calm board-book engineering: soft mint
+        field, quiet PCB texture, high-contrast text, signal colors only when
+        a wire or LED is high. Defaults below follow published low-stim /
+        kids / a11y guidance (sources at bottom) — not vibes.
+      </p>
+
+      <div class="mock" style="margin: 1.25rem 0;">
+        <div class="board" id="xor-demo" aria-label="Interactive XOR mock">
+          <div class="wire" id="w1" style="left:22%; top:28%; width:22%; height:3px;"></div>
+          <div class="wire" id="w2" style="left:22%; top:68%; width:22%; height:3px;"></div>
+          <div class="wire" id="w3" style="left:58%; top:48%; width:18%; height:3px;"></div>
+          <div class="gate" aria-hidden="true">XOR</div>
+          <button type="button" class="btn-demo red" id="btnA" aria-label="Red input" aria-pressed="false"></button>
+          <button type="button" class="btn-demo yellow" id="btnB" aria-label="Yellow input" aria-pressed="false"></button>
+          <div class="led" id="led" aria-live="polite" aria-label="Output LED off"></div>
+          <div class="label-xor">XOR</div>
+        </div>
+        <div class="panel">
+          <h3 style="margin-top:0">Live mock · XOR</h3>
+          <p style="margin-top:0">Press the buttons. LED lights only when exactly one input is high — same rule as the book page.</p>
+          <p class="mono" id="state-readout" style="color:var(--muted)">A=0 · B=0 · OUT=0</p>
+          <p style="font-size:0.9rem; margin-bottom:0">Feedback is state change (wire tint + LED fill), not confetti. Motion is short and optional.</p>
+        </div>
+      </div>
+
+      <h3>Palette tokens</h3>
+      <div class="swatches" style="margin-bottom: 1.25rem;">
+        <figure class="swatch"><div class="chip-color" style="background:#e7efe9"></div><figcaption><span class="name">Page</span><span class="hex">#E7EFE9</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#fbfdfb"></div><figcaption><span class="name">Surface</span><span class="hex">#FBFDFB</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#1a2f2c"></div><figcaption><span class="name">Ink</span><span class="hex">#1A2F2C</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#2f6b62"></div><figcaption><span class="name">Accent</span><span class="hex">#2F6B62</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#3f8f5a"></div><figcaption><span class="name">Signal / LED</span><span class="hex">#3F8F5A</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#b85a4a"></div><figcaption><span class="name">Input A</span><span class="hex">#B85A4A</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#c9a24a"></div><figcaption><span class="name">Input B</span><span class="hex">#C9A24A</span></figcaption></figure>
+        <figure class="swatch"><div class="chip-color" style="background:#b7c9c0"></div><figcaption><span class="name">Trace</span><span class="hex">#B7C9C0</span></figcaption></figure>
+      </div>
+
+      <div class="grid-2">
+        <article class="panel">
+          <h3 style="margin-top:0">Color system rules</h3>
+          <ul>
+            <li><strong>Neutrals dominate</strong> — IBM Carbon / Design Language: gray/mint field carries layout; accent is for action only.</li>
+            <li><strong>Mute saturation</strong> — VP0 low-stim: avoid harsh high-sat clashes; signal green is mid, not neon.</li>
+            <li><strong>WCAG AA contrast</strong> — ink on page ≥ 4.5:1 (W3C 1.4.3). Large labels ≥ 3:1.</li>
+            <li><strong>Color is never the only cue</strong> — W3C 1.4.1 / NDC D3.1: LED also changes shape label (“ON”), wires thicken or get dashes when hot.</li>
+            <li><strong>Role tokens, not raw hex in components</strong> — Carbon pattern: <span class="mono">--signal</span>, <span class="mono">--ink</span>, themes can swap later.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3 style="margin-top:0">Type &amp; layout</h3>
+          <ul>
+            <li><strong>Display:</strong> Fraunces (soft optical size) for page titles only.</li>
+            <li><strong>UI/body:</strong> IBM Plex Sans — readable, technical-adjacent, not a default system stack.</li>
+            <li><strong>Mono:</strong> IBM Plex Mono for gate names / truth bits.</li>
+            <li><strong>One focal point</strong> — NDC D3.4: board + buttons + LED. Chrome stays thin.</li>
+            <li><strong>Big targets</strong> — Google Building for Kids: ≥ 48×48px; prefer ~56–72px circles like the book.</li>
+            <li><strong>Always-visible nav</strong> — home / back / next with icon + text.</li>
+          </ul>
+        </article>
+      </div>
+
+      <h3>Motion, sound, sensory control</h3>
+      <div class="do-dont">
+        <div class="do">
+          <h3>Do</h3>
+          <ul>
+            <li>Brief wire/LED state fades (~150–200ms).</li>
+            <li>Honor <span class="mono">prefers-reduced-motion</span> (Apple HIG / web.dev): replace slide/zoom with crossfade or instant state.</li>
+            <li>User-started sound only; parent toggle for mute (VP0, NDC D3.3).</li>
+            <li>Sensory settings: motion / sound / contrast (VP0 checklist).</li>
+            <li>Multi-channel feedback: visual + optional soft click + optional haptic (Google kids: don’t rely on one mode).</li>
+          </ul>
+        </div>
+        <div class="dont">
+          <h3>Don’t</h3>
+          <ul>
+            <li>Autoplay music, voiceover, or video on page load.</li>
+            <li>Flash / pulse LED faster than ~3Hz; no seizure-risk patterns (W3C).</li>
+            <li>Parallax PCB, spinning gates, particle “level clear.”</li>
+            <li>Score streaks, countdown timers, or angry red error screens.</li>
+            <li>Rearranging nav between pages (VP0: predictability).</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Screen anatomy (every puzzle page)</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Zone</th>
+            <th>Contents</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Top bar</td>
+            <td>Home · page name · calm LED color chip</td>
+            <td>Same positions every level</td>
+          </tr>
+          <tr>
+            <td>Board</td>
+            <td>Buttons, traces, gate glyph, output LED</td>
+            <td>Full-bleed soft mint; faint PCB grid at ≤20% opacity</td>
+          </tr>
+          <tr>
+            <td>Hint rail</td>
+            <td>Optional pulse on a wire after idle</td>
+            <td>No text-only errors for non-readers (Google)</td>
+          </tr>
+          <tr>
+            <td>Footer</td>
+            <td>Prev · Next · Sensory</td>
+            <td>Icon + short label; large hit areas</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===================== SOURCES ===================== -->
+    <section id="sources" class="sources">
+      <h2>Style &amp; research sources</h2>
+      <div class="panel">
+        <ul>
+          <li><a href="https://vp0.com/blogs/low-stimulation-ui-kit-for-autism" target="_blank" rel="noopener">VP0 — Low-Stimulation UI for Autism</a> (muted palette, no autoplay, predictable nav, sensory settings)</li>
+          <li><a href="https://thendc.org.uk/standard" target="_blank" rel="noopener">Neurodiversity Design Standard — D3 Sensory design</a> (color not sole cue, motion purpose, visual complexity)</li>
+          <li><a href="https://developers.google.com/building-for-kids/designing-engaging-apps" target="_blank" rel="noopener">Google — Designing engaging apps for kids</a> (big targets, simple gestures, icon+text nav, encouraging errors)</li>
+          <li><a href="https://developer.apple.com/design/human-interface-guidelines/motion" target="_blank" rel="noopener">Apple HIG — Motion</a> + Accessibility Reduce Motion guidance</li>
+          <li><a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum" target="_blank" rel="noopener">WCAG 2.2 — 1.4.3 Contrast</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/use-of-color" target="_blank" rel="noopener">1.4.1 Use of Color</a></li>
+          <li><a href="https://web.dev/articles/a11y-tips-for-web-dev" target="_blank" rel="noopener">web.dev — Accessibility tips</a> (<span class="mono">prefers-reduced-motion</span>, no sole-color meaning)</li>
+          <li><a href="https://www.carbondesignsystem.com/guidelines/color/overview/" target="_blank" rel="noopener">IBM Carbon — Color</a> / <a href="https://www.ibm.com/design/language/color/" target="_blank" rel="noopener">IBM Design Language</a> (neutrals dominant, role tokens, accent sparingly)</li>
+          <li><a href="https://www.kickstarter.com/projects/babyengineering/computer-engineering-for-babies/description" target="_blank" rel="noopener">Computer Engineering for Babies</a> — page order: WIRE, NOT, OR, AND, XOR, LATCH</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer>
+      <p>Concept brief for an interactive web adaptation inspired by <em>Computer Engineering for Babies</em> (Chase Roberts). Not affiliated. Open <span class="mono">concept.html</span> in a browser to try the XOR mock.</p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const a = document.getElementById("btnA");
+      const b = document.getElementById("btnB");
+      const led = document.getElementById("led");
+      const w1 = document.getElementById("w1");
+      const w2 = document.getElementById("w2");
+      const w3 = document.getElementById("w3");
+      const readout = document.getElementById("state-readout");
+
+      function sync() {
+        const A = a.getAttribute("aria-pressed") === "true";
+        const B = b.getAttribute("aria-pressed") === "true";
+        const out = A !== B;
+        w1.classList.toggle("on", A);
+        w2.classList.toggle("on", B);
+        w3.classList.toggle("on", out);
+        led.classList.toggle("on", out);
+        led.setAttribute("aria-label", out ? "Output LED on" : "Output LED off");
+        readout.textContent = "A=" + (A ? 1 : 0) + " · B=" + (B ? 1 : 0) + " · OUT=" + (out ? 1 : 0);
+      }
+
+      function toggle(btn) {
+        const next = btn.getAttribute("aria-pressed") !== "true";
+        btn.setAttribute("aria-pressed", String(next));
+        sync();
+      }
+
+      a.addEventListener("click", () => toggle(a));
+      b.addEventListener("click", () => toggle(b));
+      sync();
+    })();
+  </script>
+</body>
+</html>

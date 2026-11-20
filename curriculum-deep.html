@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Logic Pages — Deep Curriculum Plan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #e7efe9;
+      --bg-deep: #d5e3da;
+      --surface: #f4f8f5;
+      --surface-raised: #fbfdfb;
+      --ink: #1a2f2c;
+      --ink-soft: #3d5550;
+      --muted: #5f736d;
+      --line: #b7c9c0;
+      --line-strong: #7f968c;
+      --accent: #2f6b62;
+      --accent-soft: #c5ddd6;
+      --signal: #3f8f5a;
+      --signal-soft: #d5ead9;
+      --btn-a: #b85a4a;
+      --btn-a-soft: #f0d5cf;
+      --btn-b: #c9a24a;
+      --btn-b-soft: #f3e6c4;
+      --hard: #7a3a30;
+      --hard-soft: #f0d5cf;
+      --mid: #8a6a2a;
+      --mid-soft: #f3e6c4;
+      --easy: #2d6a42;
+      --easy-soft: #d5ead9;
+      --radius: 18px;
+      --shadow: 0 1px 0 rgba(26, 47, 44, 0.06), 0 12px 28px rgba(26, 47, 44, 0.06);
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "IBM Plex Sans", "Segoe UI", sans-serif;
+      --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      line-height: 1.55;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(197, 221, 214, 0.55), transparent 42%),
+        linear-gradient(180deg, var(--bg), var(--bg-deep));
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.14;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+      z-index: 0;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1100px, calc(100% - 2rem));
+      margin: 0 auto;
+      padding: 2.25rem 0 4rem;
+    }
+
+    header.hero {
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 1.75rem;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      max-width: 16ch;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--ink-soft);
+      font-size: 1.1rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface-raised);
+      color: var(--muted);
+    }
+
+    nav.toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.65rem;
+      margin-bottom: 2.25rem;
+    }
+
+    nav.toc a {
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.8rem 0.95rem;
+      box-shadow: var(--shadow);
+    }
+
+    nav.toc a span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    section {
+      margin-bottom: 2.75rem;
+      scroll-margin-top: 1rem;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.45rem, 3vw, 1.9rem);
+      margin: 0 0 0.65rem;
+      letter-spacing: -0.015em;
+    }
+
+    h3 {
+      font-size: 1.08rem;
+      margin: 0 0 0.4rem;
+    }
+
+    p { color: var(--ink-soft); max-width: 68ch; }
+
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 0 12px 12px 0;
+      padding: 0.75rem 1rem;
+      color: var(--ink);
+      max-width: none;
+    }
+
+    .panel {
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.22rem 0.5rem;
+      border-radius: 8px;
+      border: 1px solid;
+      white-space: nowrap;
+    }
+
+    .tag.easy { background: var(--easy-soft); color: var(--easy); border-color: #b7d7be; }
+    .tag.mid { background: var(--mid-soft); color: var(--mid); border-color: #e2d0a0; }
+    .tag.hard { background: var(--hard-soft); color: var(--hard); border-color: #e0b5ac; }
+    .tag.track { background: var(--accent-soft); color: var(--accent); border-color: #9fc4ba; }
+
+    .quest-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 0.45rem;
+      margin-bottom: 0.55rem;
+    }
+
+    .quest-head h3 { margin: 0; font-family: var(--font-display); font-size: 1.25rem; }
+
+    .mono { font-family: var(--font-mono); font-size: 0.86em; }
+
+    .flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0.7rem 0;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .node {
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 0.35rem 0.55rem;
+      color: var(--ink);
+    }
+
+    .node.btn { background: var(--btn-a-soft); border-color: #e0b5ac; }
+    .node.btn2 { background: var(--btn-b-soft); border-color: #e2d0a0; }
+    .node.gate { background: var(--surface-raised); border-color: var(--ink); font-weight: 500; }
+    .node.led { background: var(--signal-soft); border-color: #b7d7be; }
+    .node.mid { background: var(--accent-soft); border-color: #9fc4ba; }
+
+    .arrow { color: var(--muted); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.93rem;
+      background: var(--surface-raised);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--accent-soft);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      background: var(--bg);
+      margin-top: 0.65rem;
+    }
+
+    .stage strong {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .stage p { margin: 0; font-size: 0.95rem; }
+
+    ul.tight { margin: 0.4rem 0 0; padding-left: 1.15rem; color: var(--ink-soft); }
+    ul.tight li { margin: 0.3rem 0; }
+
+    .from-concept {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.55rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 1.25rem;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .track-banner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      margin: 0 0 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="eyebrow">Plan · not shipped yet</div>
+      <h1>Deep curriculum — nested gates</h1>
+      <p class="lede">
+        The live game’s six pages teach one gate each. This plan adds
+        <strong>compose quests</strong>: an early sub-circuit produces a signal
+        that becomes an input to the next gate. Simple pieces. Harder chains.
+        Builds on ideas already sketched in <span class="mono">concept.html</span>.
+      </p>
+      <div class="meta">
+        <span class="chip">Track A · Primer (shipped)</span>
+        <span class="chip">Track B · Nest</span>
+        <span class="chip">Track C · Hold / memory</span>
+        <span class="chip">Track D · Capstone</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="Sections">
+      <a href="#principle"><span>01</span>Nesting principle</a>
+      <a href="#ladder"><span>02</span>Difficulty ladder</a>
+      <a href="#track-a"><span>03</span>Track A primer</a>
+      <a href="#track-b"><span>04</span>Track B nest quests</a>
+      <a href="#track-c"><span>05</span>Track C memory</a>
+      <a href="#track-d"><span>06</span>Track D capstones</a>
+      <a href="#carry"><span>07</span>From concept.html</span></a>
+      <a href="#data"><span>08</span>Level data shape</a>
+    </nav>
+
+    <!-- PRINCIPLE -->
+    <section id="principle">
+      <h2>Nesting principle</h2>
+      <p class="callout">
+        Every deep puzzle is a <em>tree of signals</em>, not a bigger UI.
+        Buttons are leaves. Intermediate gate outputs are named nodes
+        (<span class="mono">N1</span>, <span class="mono">N2</span>…).
+        The final LED is the only win light — but mid-LEDs (dim “probe lights”)
+        can show whether a sub-puzzle is solved, without scoring.
+      </p>
+
+      <div class="grid-3" style="margin-top:1rem;">
+        <article class="panel">
+          <h3>Sub-puzzle</h3>
+          <p style="margin:0;font-size:0.95rem;">A known gate with a local goal. Its output becomes a wire into the parent gate.</p>
+        </article>
+        <article class="panel">
+          <h3>Carry wire</h3>
+          <p style="margin:0;font-size:0.95rem;">Hot only when the sub-rule is true. Player sees it change color — same language as Track A.</p>
+        </article>
+        <article class="panel">
+          <h3>Parent gate</h3>
+          <p style="margin:0;font-size:0.95rem;">Treats carry wires like buttons. Player must keep sub-conditions true while satisfying the outer rule.</p>
+        </article>
+      </div>
+
+      <div class="panel" style="margin-top:1rem;">
+        <h3 style="margin-top:0">Canonical pattern</h3>
+        <div class="flow">
+          <span class="node btn">Btn A</span><span class="arrow">→</span>
+          <span class="node gate">GATE₁</span><span class="arrow">→</span>
+          <span class="node mid">N1</span><span class="arrow">→</span>
+          <span class="node gate">GATE₂</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">Btn B</span><span class="arrow">→</span>
+          <span class="node gate">GATE₁</span>
+          <span class="arrow" style="margin-left:0.5rem;">and/or</span>
+          <span class="node btn">Btn C</span><span class="arrow">→</span>
+          <span class="node gate">GATE₂</span>
+        </div>
+        <p style="margin:0.5rem 0 0;font-size:0.92rem;">
+          Interaction stays: hold / toggle buttons only. No new gesture vocabulary.
+          Challenge comes from <em>which combination keeps N1 high while GATE₂ is happy</em>.
+        </p>
+      </div>
+    </section>
+
+    <!-- LADDER -->
+    <section id="ladder">
+      <h2>Difficulty ladder</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Tier</th>
+            <th>What changes</th>
+            <th>Player skill</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag easy">0</span> Primer</td>
+            <td>One gate, 1–2 buttons, one LED</td>
+            <td>Map press → light</td>
+          </tr>
+          <tr>
+            <td><span class="tag mid">1</span> Chain</td>
+            <td>Gate output feeds one other gate (depth 2)</td>
+            <td>Hold a sub-condition while acting on the outer gate</td>
+          </tr>
+          <tr>
+            <td><span class="tag mid">2</span> Branch</td>
+            <td>Two sub-gates feed one parent (fan-in)</td>
+            <td>Coordinate two independent rules at once</td>
+          </tr>
+          <tr>
+            <td><span class="tag hard">3</span> Invert mid</td>
+            <td>NOT on a carry wire; “wrong” feels right</td>
+            <td>Reason about flipped intermediate state</td>
+          </tr>
+          <tr>
+            <td><span class="tag hard">4</span> Memory</td>
+            <td>Latch / sticky node in the middle of a chain</td>
+            <td>Set state, then solve the outer puzzle with hands free</td>
+          </tr>
+          <tr>
+            <td><span class="tag hard">5</span> Capstone</td>
+            <td>Half-adder / mux / build-from-parts</td>
+            <td>Recognize composed behavior as a named machine</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- TRACK A -->
+    <section id="track-a">
+      <div class="track-banner">
+        <h2 style="margin:0">Track A — Primer</h2>
+        <span class="tag track">Shipped</span>
+      </div>
+      <p>Keep as unlock wall for Track B. No redesign required — only gating.</p>
+      <div class="grid-3">
+        <div class="panel"><strong class="mono">A1–A6</strong><p style="margin:0.35rem 0 0;font-size:0.92rem;">WIRE · NOT · OR · AND · XOR · LATCH</p></div>
+        <div class="panel"><strong>Unlock rule</strong><p style="margin:0.35rem 0 0;font-size:0.92rem;">Complete A1–A5 to open Track B. Complete A6 to open Track C.</p></div>
+        <div class="panel"><strong>Pedagogy</strong><p style="margin:0.35rem 0 0;font-size:0.92rem;">Atomic rules only. Names reveal after discovery. Same as live game.</p></div>
+      </div>
+    </section>
+
+    <!-- TRACK B -->
+    <section id="track-b">
+      <div class="track-banner">
+        <h2 style="margin:0">Track B — Nest quests</h2>
+        <span class="tag track">Plan</span>
+      </div>
+      <p>Each quest below is one “page.” Depth increases; button count stays ≤ 3.</p>
+
+      <!-- B1 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B1 · NOT into AND</h3>
+          <span class="tag mid">Tier 1</span>
+        </div>
+        <p style="margin:0;">Light the LED only when the red button is <em>released</em> and yellow is pressed.</p>
+        <div class="flow">
+          <span class="node btn">Red</span><span class="arrow">→</span>
+          <span class="node gate">NOT</span><span class="arrow">→</span>
+          <span class="node mid">N1</span><span class="arrow">→</span>
+          <span class="node gate">AND</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">Yellow</span><span class="arrow">→</span>
+          <span class="node gate">AND</span>
+        </div>
+        <div class="stage">
+          <strong>Win</strong>
+          <p>LED on with red up + yellow down. If red is held, N1 dies and LED cannot stay on.</p>
+        </div>
+        <div class="stage">
+          <strong>Why it teaches</strong>
+          <p>First time a button’s “off” is useful. Player must read the mid-wire N1.</p>
+        </div>
+        <p class="from-concept">Prereq: A2 NOT, A4 AND</p>
+      </article>
+
+      <!-- B2 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B2 · OR feeding AND</h3>
+          <span class="tag mid">Tier 1</span>
+        </div>
+        <p style="margin:0;">Either of two “door” buttons may arm the system; a third “key” must also be pressed.</p>
+        <div class="flow">
+          <span class="node btn">Door1</span><span class="arrow">→</span>
+          <span class="node gate">OR</span><span class="arrow">→</span>
+          <span class="node mid">Armed</span><span class="arrow">→</span>
+          <span class="node gate">AND</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">Door2</span><span class="arrow">→</span>
+          <span class="node gate">OR</span>
+          <span class="arrow" style="margin-left:0.4rem;"></span>
+          <span class="node btn">Key</span><span class="arrow">→</span>
+          <span class="node gate">AND</span>
+        </div>
+        <div class="stage">
+          <strong>Win</strong>
+          <p>Any door + key. Neither door alone. Key alone fails.</p>
+        </div>
+        <p class="from-concept">From concept: AND Handshake / real-world “door + key”. Prereq: A3, A4</p>
+      </article>
+
+      <!-- B3 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B3 · XOR then OR</h3>
+          <span class="tag mid">Tier 2</span>
+        </div>
+        <p style="margin:0;">Exactly one of Red/Yellow creates “odd”. Blue is a bypass. LED on if odd <em>or</em> bypass.</p>
+        <div class="flow">
+          <span class="node btn">Red</span><span class="arrow">→</span>
+          <span class="node gate">XOR</span><span class="arrow">→</span>
+          <span class="node mid">Odd</span><span class="arrow">→</span>
+          <span class="node gate">OR</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">Yellow</span><span class="arrow">→</span>
+          <span class="node gate">XOR</span>
+          <span class="arrow" style="margin-left:0.4rem;"></span>
+          <span class="node btn">Blue</span><span class="arrow">→</span>
+          <span class="node gate">OR</span>
+        </div>
+        <div class="stage">
+          <strong>Challenges</strong>
+          <p>Both red+yellow → Odd=0; without Blue the LED dies. Player discovers “both cancels” then uses bypass.</p>
+        </div>
+        <p class="from-concept">From concept: XOR Door. Prereq: A5 XOR, A3 OR</p>
+      </article>
+
+      <!-- B4 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B4 · Double NOT sandwich</h3>
+          <span class="tag mid">Tier 1</span>
+        </div>
+        <p style="margin:0;">Cover-page gag from the book: button → NOT → NOT → LED. Pressing lights it. Teaches cancellation.</p>
+        <div class="flow">
+          <span class="node btn">Btn</span><span class="arrow">→</span>
+          <span class="node gate">NOT</span><span class="arrow">→</span>
+          <span class="node mid">N1</span><span class="arrow">→</span>
+          <span class="node gate">NOT</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="stage">
+          <strong>Win</strong>
+          <p>Hold button → LED on. Mid probe N1 is off while LED is on — important visual.</p>
+        </div>
+        <p class="from-concept">Book cover: two NOTs in series. Prereq: A2</p>
+      </article>
+
+      <!-- B5 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B5 · AND of two NOTs (NOR-ish feel)</h3>
+          <span class="tag hard">Tier 3</span>
+        </div>
+        <p style="margin:0;">LED on only when <em>neither</em> button is pressed. Built as NOT(A) AND NOT(B) — no new gate name yet.</p>
+        <div class="flow">
+          <span class="node btn">A</span><span class="arrow">→</span>
+          <span class="node gate">NOT</span><span class="arrow">→</span>
+          <span class="node mid">Ā</span><span class="arrow">→</span>
+          <span class="node gate">AND</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">B</span><span class="arrow">→</span>
+          <span class="node gate">NOT</span><span class="arrow">→</span>
+          <span class="node mid">B̄</span><span class="arrow">→</span>
+          <span class="node gate">AND</span>
+        </div>
+        <div class="stage">
+          <strong>Win</strong>
+          <p>Both released. Any press kills a mid-wire and the LED.</p>
+        </div>
+        <div class="stage">
+          <strong>Reveal</strong>
+          <p>After win: “You built a NOR.” Optional later page teaches NAND the same way: NOT(A AND B).</p>
+        </div>
+      </article>
+
+      <!-- B6 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B6 · Branch: OR || AND into XOR</h3>
+          <span class="tag hard">Tier 2–3</span>
+        </div>
+        <p style="margin:0;">Left pair makes OR-result L. Right pair makes AND-result R. Final LED = L XOR R. Three or four buttons; prefer 3 by sharing one.</p>
+        <div class="flow">
+          <span class="node btn">A</span><span class="arrow">→</span>
+          <span class="node gate">OR</span><span class="arrow">→</span>
+          <span class="node mid">L</span><span class="arrow">→</span>
+          <span class="node gate">XOR</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">B</span><span class="arrow">→</span>
+          <span class="node gate">OR</span>
+          <span class="arrow" style="margin-left:0.35rem;"></span>
+          <span class="node btn">B</span><span class="arrow">+</span>
+          <span class="node btn2">C</span><span class="arrow">→</span>
+          <span class="node gate">AND</span><span class="arrow">→</span>
+          <span class="node mid">R</span><span class="arrow">→</span>
+          <span class="node gate">XOR</span>
+        </div>
+        <div class="stage">
+          <strong>Design note</strong>
+          <p>Shared B makes the truth table non-obvious. Goal copy: “Make L and R different.” Probe LEDs on L and R.</p>
+        </div>
+      </article>
+
+      <!-- B7 -->
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>B7 · Broken jumper (spatial nest)</h3>
+          <span class="tag mid">Tier 1</span>
+        </div>
+        <p style="margin:0;">AND circuit with a gap on one input wire. Drag one jumper segment to close the path, then press both buttons.</p>
+        <div class="stage">
+          <strong>Stages</strong>
+          <p>1) Close the wire (N1 can go hot). 2) Satisfy AND. Nesting is physical path + logic rule.</p>
+        </div>
+        <p class="from-concept">Directly from concept.html “Broken Wire”.</p>
+      </article>
+
+      <!-- B8 -->
+      <article class="panel">
+        <div class="quest-head">
+          <h3>B8 · Find the nested rule</h3>
+          <span class="tag hard">Tier 3</span>
+        </div>
+        <p style="margin:0;">Gate glyphs hidden (???). Fixed circuit is (A XOR B) AND C. Player experiments until LED matches a silent truth target, then labels fade in.</p>
+        <div class="flow">
+          <span class="node btn">A</span><span class="arrow">→</span>
+          <span class="node gate">???</span><span class="arrow">→</span>
+          <span class="node mid">N1</span><span class="arrow">→</span>
+          <span class="node gate">???</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <p class="from-concept">From concept “Find the Rule”, upgraded to depth-2.</p>
+      </article>
+    </section>
+
+    <!-- TRACK C -->
+    <section id="track-c">
+      <div class="track-banner">
+        <h2 style="margin:0">Track C — Memory nests</h2>
+        <span class="tag track">Plan</span>
+      </div>
+      <p>Latch output becomes a sticky carry into another gate. Hands can leave SET and still keep a mid-signal high.</p>
+
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>C1 · Latch Alarm + AND key</h3>
+          <span class="tag hard">Tier 4</span>
+        </div>
+        <div class="flow">
+          <span class="node btn">SET</span><span class="arrow">→</span>
+          <span class="node gate">LATCH</span><span class="arrow">→</span>
+          <span class="node mid">Q</span><span class="arrow">→</span>
+          <span class="node gate">AND</span><span class="arrow">→</span>
+          <span class="node led">LED</span>
+        </div>
+        <div class="flow">
+          <span class="node btn2">RESET</span><span class="arrow">→</span>
+          <span class="node gate">LATCH</span>
+          <span class="arrow" style="margin-left:0.35rem;"></span>
+          <span class="node btn">Key</span><span class="arrow">→</span>
+          <span class="node gate">AND</span>
+        </div>
+        <div class="stage">
+          <strong>Win sequence</strong>
+          <p>1) Pulse SET (Q stays on). 2) Press Key → LED. 3) RESET clears for retry. Without SET first, Key alone fails.</p>
+        </div>
+        <p class="from-concept">Concept “Latch Alarm” composed with AND.</p>
+      </article>
+
+      <article class="panel" style="margin-bottom:0.9rem;">
+        <div class="quest-head">
+          <h3>C2 · Armed XOR</h3>
+          <span class="tag hard">Tier 4</span>
+        </div>
+        <p style="margin:0;">Q from latch arms the board. Final LED = Q AND (A XOR B). Must arm, then choose exactly one of A/B.</p>
+        <div class="stage">
+          <strong>Trap</strong>
+          <p>Arming then pressing both A+B kills XOR. Player debugs with probe on Odd.</p>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="quest-head">
+          <h3>C3 · Build a Latch (compose)</h3>
+          <span class="tag hard">Tier 5</span>
+        </div>
+        <p style="margin:0;">Drag NOT / AND / OR tiles onto sockets until SET/RESET behavior matches the target demo LED.</p>
+        <p class="from-concept">Concept “Build a Latch” — book’s final-page idea. Unlock after C1–C2 so players know the behavior before assembling it.</p>
+      </article>
+    </section>
+
+    <!-- TRACK D -->
+    <section id="track-d">
+      <div class="track-banner">
+        <h2 style="margin:0">Track D — Capstones</h2>
+        <span class="tag track">Plan</span>
+      </div>
+
+      <div class="grid-2">
+        <article class="panel">
+          <div class="quest-head">
+            <h3>D1 · Half-Adder Spark</h3>
+            <span class="tag hard">Tier 5</span>
+          </div>
+          <p style="margin:0;">Two bits A,B. Sum LED = XOR. Carry LED = AND. Win when a given target pair lights (e.g. show 1+1 → Sum 0, Carry 1).</p>
+          <div class="flow">
+            <span class="node btn">A</span><span class="arrow">→</span>
+            <span class="node gate">XOR</span><span class="arrow">→</span>
+            <span class="node led">Sum</span>
+          </div>
+          <div class="flow">
+            <span class="node btn2">B</span><span class="arrow">→</span>
+            <span class="node gate">AND</span><span class="arrow">→</span>
+            <span class="node led">Carry</span>
+          </div>
+          <p class="from-concept">From concept.html — first “math-like” machine.</p>
+        </article>
+
+        <article class="panel">
+          <div class="quest-head">
+            <h3>D2 · 2-to-1 Mux</h3>
+            <span class="tag hard">Tier 5</span>
+          </div>
+          <p style="margin:0;">Select S chooses whether Data0 or Data1 reaches LED. Built as (D0 AND NOT S) OR (D1 AND S).</p>
+          <div class="flow">
+            <span class="node btn">S</span><span class="arrow">→</span>
+            <span class="node gate">NOT</span><span class="arrow">/</span>
+            <span class="node gate">AND</span><span class="arrow">→</span>
+            <span class="node gate">OR</span><span class="arrow">→</span>
+            <span class="node led">LED</span>
+          </div>
+          <div class="stage">
+            <strong>Win</strong>
+            <p>Match three target scenes: S=0 shows D0; S=1 shows D1; flip S live.</p>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="quest-head">
+            <h3>D3 · Parity lock</h3>
+            <span class="tag hard">Tier 3</span>
+          </div>
+          <p style="margin:0;">Three buttons into cascaded XORs. LED on for odd parity. Goal: light LED with exactly 1 or exactly 3 pressed.</p>
+        </article>
+
+        <article class="panel">
+          <div class="quest-head">
+            <h3>D4 · Mystery Bus</h3>
+            <span class="tag mid">Sandbox</span>
+          </div>
+          <p style="margin:0;">Free place buttons/gates/LEDs. Optional “challenge cards” load a win condition into an empty board. Unlocked after D1.</p>
+          <p class="from-concept">Concept “Mystery Bus”.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- CARRY FROM CONCEPT -->
+    <section id="carry">
+      <h2>Carried from concept.html</h2>
+      <p>Original mid-level list → where it lands in this plan.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Concept puzzle</th>
+            <th>Plan home</th>
+            <th>Upgrade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Press &amp; Hold Wire</td>
+            <td>A1</td>
+            <td>Already shipped</td>
+          </tr>
+          <tr>
+            <td>Broken Wire</td>
+            <td>B7</td>
+            <td>Add as spatial stage before AND</td>
+          </tr>
+          <tr>
+            <td>Find the Rule</td>
+            <td>B8</td>
+            <td>Nested ??? glyphs</td>
+          </tr>
+          <tr>
+            <td>XOR Door</td>
+            <td>B3 / D3</td>
+            <td>Bypass OR; later parity</td>
+          </tr>
+          <tr>
+            <td>AND Handshake</td>
+            <td>B2</td>
+            <td>OR-armed AND with 3 inputs</td>
+          </tr>
+          <tr>
+            <td>NOT Night-Light</td>
+            <td>B1</td>
+            <td>NOT feeding AND</td>
+          </tr>
+          <tr>
+            <td>Latch Alarm</td>
+            <td>C1</td>
+            <td>Latch output into AND</td>
+          </tr>
+          <tr>
+            <td>Build a Latch</td>
+            <td>C3</td>
+            <td>After experiencing C1 behavior</td>
+          </tr>
+          <tr>
+            <td>Half-Adder Spark</td>
+            <td>D1</td>
+            <td>Two LEDs, target patterns</td>
+          </tr>
+          <tr>
+            <td>Mystery Bus</td>
+            <td>D4</td>
+            <td>Sandbox + challenge cards</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- DATA SHAPE -->
+    <section id="data">
+      <h2>Level data shape (for implementation)</h2>
+      <p>One JSON-like object per quest. Evaluate bottom-up each frame.</p>
+      <div class="panel">
+        <pre class="mono" style="margin:0; white-space:pre-wrap; font-size:0.82rem; line-height:1.45; color:var(--ink-soft);">{
+  id: "b1-not-and",
+  track: "B",
+  tier: 1,
+  prereq: ["not", "and"],
+  buttons: [
+    { id: "a", color: "red", label: "Red" },
+    { id: "b", color: "yellow", label: "Yellow" }
+  ],
+  nodes: [
+    { id: "n1", op: "NOT", inputs: ["a"], probe: true },
+    { id: "out", op: "AND", inputs: ["n1", "b"], led: true }
+  ],
+  goal: "Release red, hold yellow.",
+  completeWhen: { out: true, a: false, b: true },
+  revealName: "NOT → AND"
+}</pre>
+      </div>
+
+      <div class="grid-2" style="margin-top:0.9rem;">
+        <article class="panel">
+          <h3 style="margin-top:0">Runtime rules</h3>
+          <ul class="tight">
+            <li>Buttons are boolean sources.</li>
+            <li>Nodes recompute each input change.</li>
+            <li><span class="mono">probe: true</span> → small mid LED / hot wire label.</li>
+            <li><span class="mono">led: true</span> → main win light.</li>
+            <li>Latch nodes keep state until RESET input.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3 style="margin-top:0">Ship order (suggested)</h3>
+          <ul class="tight">
+            <li>1. Graph evaluator + probe LEDs</li>
+            <li>2. B1, B4, B2 (easiest nests)</li>
+            <li>3. B3, B5, B6</li>
+            <li>4. C1, C2 then C3 builder</li>
+            <li>5. D1 half-adder, D2 mux</li>
+            <li>6. B7 jumper + D4 sandbox</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="callout" style="margin-top:1rem;">
+        Keep copy literal: “Make the middle wire light, then the final light.”
+        No timers. Wrong combos just leave the LED off. Hints point at a cold probe wire after idle — same as Track A.
+      </div>
+    </section>
+
+    <footer>
+      Companion plan to <span class="mono">concept.html</span> and the live Primer in <span class="mono">index.html</span>.
+      Nesting = carry wires between known gates. Depth before decoration.
+    </footer>
+  </div>
+</body>
+</html>
