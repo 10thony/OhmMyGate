@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="Logic Pages — nested logic gate puzzles inspired by Computer Engineering for Babies." />
   <title>Logic Pages</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      var base = p.endsWith("/") ? p : p.replace(/[^/]*$/, "");
+      if (!base.endsWith("/")) base += "/";
+      var el = document.createElement("base");
+      el.href = base;
+      document.head.prepend(el);
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/game.css?v=truth-progress1" />
+  <link rel="stylesheet" href="css/game.css?v=mobile-play12" />
 </head>
 <body>
   <div id="app">
@@ -57,12 +67,17 @@
           </div>
         </div>
 
-        <aside class="side-panel">
-          <h2 id="side-title">Find the rule</h2>
-          <div class="goal" id="side-goal">Press the buttons.</div>
-          <div class="truth" id="side-truth" aria-label="Truth table"></div>
-          <p class="hint" id="side-hint" aria-live="polite"></p>
-          <button type="button" class="btn-secondary" id="btn-parent" style="justify-self:start;">Parent note</button>
+        <aside class="side-panel" id="side-panel">
+          <button type="button" class="side-panel-head" id="btn-rules-toggle" aria-expanded="false" aria-controls="side-panel-body">
+            <h2 id="side-title">Find the rule</h2>
+            <span class="side-chevron" aria-hidden="true">▴</span>
+          </button>
+          <div class="side-panel-body" id="side-panel-body">
+            <div class="goal" id="side-goal">Press the buttons.</div>
+            <div class="truth" id="side-truth" aria-label="Truth table"></div>
+            <p class="hint" id="side-hint" aria-live="polite"></p>
+            <button type="button" class="btn-secondary" id="btn-parent">Parent note</button>
+          </div>
         </aside>
       </div>
     </section>
@@ -150,6 +165,6 @@
 
   <script src="js/draw.js?v=pink-rainbow2"></script>
   <script src="js/curriculum.js?v=tracke-wires5"></script>
-  <script src="js/game.js?v=truth-progress1"></script>
+  <script src="js/game.js?v=mobile-play9"></script>
 </body>
 </html>

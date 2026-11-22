@@ -1,0 +1,35 @@
+# OhmMyGate (Logic Pages) — Clerk gate on http://192.168.151.30:5370 (PathBase /ohm).
+# Funnel :443 /ohm via Projects/Caddyfile → funnel-proxy.
+#
+# Usage:
+#   bash deploy/start.sh
+
+services:
+  ohmmgate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ohmmgate:local
+    platform: linux/amd64
+    container_name: ohmmgate
+    restart: unless-stopped
+    env_file:
+      - .env.local
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://0.0.0.0:5370
+      PublicBaseUrl: https://cobec-sv-01.tail336878.ts.net/ohm
+      PathBase: /ohm
+      Data__Directory: /app/Data
+      CLERK_AUTHORIZED_PARTIES: https://cobec-sv-01.tail336878.ts.net,https://cobec-spark.tail336878.ts.net,http://192.168.151.30:5370
+    volumes:
+      - ./Data:/app/Data
+      - ./.env.local:/app/.env.local:ro
+    ports:
+      - "192.168.151.30:5370:5370"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:5370/ohm/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

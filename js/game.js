@@ -32,12 +32,14 @@
     svg: document.getElementById("circuit"),
     inputs: document.getElementById("inputs"),
     titleMark: document.getElementById("title-mark"),
+    sidePanel: document.getElementById("side-panel"),
     sideTitle: document.getElementById("side-title"),
     sideGoal: document.getElementById("side-goal"),
     sideTruth: document.getElementById("side-truth"),
     boardStatus: document.getElementById("board-status"),
     boardBlurb: document.getElementById("board-blurb"),
     sideHint: document.getElementById("side-hint"),
+    rulesToggle: document.getElementById("btn-rules-toggle"),
     tracks: document.getElementById("tracks"),
     btnPrev: document.getElementById("btn-prev"),
     btnNext: document.getElementById("btn-next"),
@@ -118,6 +120,16 @@
     }
   }
 
+  function centerBoardCard() {
+    const shell = document.querySelector(".board-shell");
+    if (!shell || !el.board) return;
+    const shellRect = shell.getBoundingClientRect();
+    const boardRect = el.board.getBoundingClientRect();
+    const delta =
+      boardRect.left + boardRect.width / 2 - (shellRect.left + shellRect.width / 2);
+    shell.scrollLeft += delta;
+  }
+
   function setScreen(name) {
     state.screen = name;
     Object.entries(el.screens).forEach(([key, node]) => {
@@ -133,6 +145,9 @@
       el.pageChip.textContent = "Logic Pages";
     }
     document.getElementById("play-nav").hidden = name !== "play";
+    if (name === "play") {
+      requestAnimationFrame(() => requestAnimationFrame(centerBoardCard));
+    }
   }
 
   function indexInTrack(L) {
@@ -442,6 +457,7 @@
     renderBoard();
     renderSide();
     renderTracks();
+    requestAnimationFrame(() => requestAnimationFrame(centerBoardCard));
   }
 
   function nextPage() {
@@ -476,6 +492,8 @@
   let heldId = null;
 
   function bindButton(button, id) {
+    button.addEventListener("contextmenu", (e) => e.preventDefault());
+    button.addEventListener("selectstart", (e) => e.preventDefault());
     button.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       try {
@@ -516,6 +534,12 @@
         release();
       }
     });
+  }
+
+  function setRulesExpanded(open) {
+    if (!el.sidePanel || !el.rulesToggle) return;
+    el.sidePanel.classList.toggle("expanded", open);
+    el.rulesToggle.setAttribute("aria-expanded", open ? "true" : "false");
   }
 
   window.addEventListener("pointerup", () => {
@@ -621,6 +645,35 @@
     });
     document.getElementById("btn-parent").addEventListener("click", openParent);
 
+    if (el.rulesToggle) {
+      el.rulesToggle.addEventListener("click", () => {
+        setRulesExpanded(!el.sidePanel.classList.contains("expanded"));
+      });
+      // Phone starts collapsed; desktop CSS ignores .expanded.
+      setRulesExpanded(false);
+    }
+
+    // Kill iOS/Android long-press callouts / text selection on the board.
+    const blockSelect = (e) => e.preventDefault();
+    const blockTargets = [el.board, el.sidePanel, document.getElementById("app")].filter(Boolean);
+    blockTargets.forEach((node) => {
+      node.addEventListener("contextmenu", blockSelect);
+      node.addEventListener("selectstart", blockSelect);
+      node.addEventListener("dragstart", blockSelect);
+    });
+    document.addEventListener(
+      "selectionchange",
+      () => {
+        const sel = window.getSelection?.();
+        if (!sel || sel.isCollapsed) return;
+        const anchor = sel.anchorNode;
+        if (anchor && document.getElementById("app")?.contains(anchor)) {
+          sel.removeAllRanges();
+        }
+      },
+      true
+    );
+
     el.settingsModal.querySelectorAll("[data-close]").forEach((b) =>
       b.addEventListener("click", () => closeModal(el.settingsModal))
     );
@@ -676,6 +729,13 @@
         closeModal(el.courseModal);
         closeModal(el.parentModal);
       }
+    });
+
+    window.addEventListener("resize", () => {
+      if (state.screen === "play") centerBoardCard();
+    });
+    window.addEventListener("orientationchange", () => {
+      setTimeout(centerBoardCard, 200);
     });
   }
 

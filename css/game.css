@@ -49,6 +49,39 @@ html.reduce-motion {
   box-sizing: border-box;
 }
 
+/* Hold-to-press UI — never treat long-press as text/image select */
+html,
+body,
+#app,
+.board,
+.board-stage,
+.input-btn,
+.side-panel,
+.topbar,
+.footer,
+.icon-btn,
+.page-chip {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#app.play-mode,
+#app.play-mode svg,
+#app.play-mode text,
+#app.play-mode button {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+#app.play-mode input,
+#app.play-mode textarea {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+
 html,
 body {
   margin: 0;
@@ -479,8 +512,10 @@ select {
     repeating-linear-gradient(90deg, transparent, transparent 21px, rgba(224, 150, 180, 0.28) 22px),
     var(--bg);
   overflow: hidden;
-  touch-action: manipulation;
+  touch-action: none;
   user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* Letterbox frame matching SVG viewBox 560×260 — button % coords map here */
@@ -496,6 +531,132 @@ select {
   max-height: 100%;
   container-type: size;
   container-name: stage;
+  touch-action: none;
+}
+
+/*
+ * Phones: portrait width OR landscape height.
+ * iPhone landscape is often ~844×390 — max-width:640 alone misses it.
+ *
+ * Don't fullscreen a landscape 560×260 strip inside a tall grid (looks "zoomed out").
+ * Instead: page pink chrome + a fitted circuit card that owns the middle.
+ */
+@media (max-width: 900px), (max-height: 520px) {
+  #app.play-mode .board-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3.6rem 0.55rem 5.75rem;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 12% 0%, rgba(255, 182, 210, 0.5), transparent 42%),
+      radial-gradient(circle at 88% 100%, rgba(255, 196, 220, 0.35), transparent 45%),
+      linear-gradient(180deg, var(--bg), var(--bg-deep));
+  }
+
+  #app.play-mode .board {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 560 / 260;
+    flex: 0 1 auto;
+    /* Slight zoom past the letterbox — keeps WIRE button+LED on a 390-wide phone */
+    transform: scale(1.22);
+    transform-origin: center center;
+    border-radius: 18px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    container-type: size;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(255, 255, 255, 0.5), transparent 42%),
+      repeating-linear-gradient(0deg, transparent, transparent 18px, rgba(224, 150, 180, 0.3) 19px),
+      repeating-linear-gradient(90deg, transparent, transparent 18px, rgba(224, 150, 180, 0.3) 19px),
+      var(--surface);
+  }
+
+  #app.play-mode .board-stage {
+    position: absolute;
+    inset: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    aspect-ratio: auto;
+    border-radius: 0;
+  }
+
+  #app.play-mode .board-status {
+    position: absolute;
+    top: 0.45rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.68rem;
+    padding: 0.18rem 0.5rem;
+    max-width: calc(100% - 1rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  #app.play-mode .page-title-mark {
+    display: none;
+  }
+
+  #app.play-mode .board-blurb {
+    display: none;
+  }
+
+  #app.play-mode .input-btn {
+    width: 12%;
+    border-width: 3px;
+  }
+
+  #app.play-mode .topbar .brand h1 {
+    font-size: 1.05rem;
+  }
+
+  #app.play-mode .icon-btn {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0.45rem 0.65rem;
+  }
+
+  #app.play-mode .icon-btn .label {
+    display: none;
+  }
+
+  #app.play-mode .footer {
+    padding: 0.35rem 0.55rem calc(0.35rem + var(--safe-bottom));
+  }
+}
+
+/* Landscape: taller card — height is the scarce axis */
+@media (max-height: 520px) and (orientation: landscape) {
+  #app.play-mode .board-shell {
+    padding: 2.35rem 0.75rem 3.4rem;
+  }
+
+  #app.play-mode .board {
+    transform: none; /* portrait scale must not apply here */
+    width: min(94vw, calc((100dvh - 5.8rem) * 560 / 260));
+    height: auto;
+    max-height: calc(100dvh - 5.8rem);
+    aspect-ratio: 560 / 260;
+  }
+
+  #app.play-mode .board-status {
+    top: 0.35rem;
+    font-size: 0.62rem;
+  }
+
+  #app.play-mode .input-btn {
+    width: 9%;
+  }
 }
 
 .board-stage svg,
@@ -642,6 +803,10 @@ html.reduce-motion .led-bulb.on {
     0 4px 0 rgba(58, 36, 52, 0.08);
   transition: transform 80ms ease, box-shadow 80ms ease, filter var(--motion) ease;
   -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: none;
 }
 
 .input-btn.color-red { background: var(--btn-a); }
@@ -788,6 +953,43 @@ html.reduce-motion .led-bulb.on {
   scrollbar-width: thin;
 }
 
+.side-panel-head {
+  appearance: none;
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: default;
+  pointer-events: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.side-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.side-chevron {
+  display: none;
+  font-size: 0.85rem;
+  color: var(--accent);
+  transition: transform var(--motion) ease;
+  flex-shrink: 0;
+}
+
 .side-panel .goal {
   padding: 0.45rem 0.55rem;
   font-size: 0.86rem;
@@ -821,16 +1023,106 @@ html.reduce-motion .led-bulb.on {
   margin-top: 0.1rem;
 }
 
-@media (max-width: 640px) {
+/* Compact / phone chrome — includes landscape iPhones (>640px wide) */
+@media (max-width: 900px), (max-height: 520px) {
   #app.play-mode .side-panel,
   .side-panel {
     top: auto !important;
-    right: 0.65rem !important;
-    left: 0.65rem !important;
-    bottom: 3.75rem !important;
+    right: 0.5rem !important;
+    left: 0.5rem !important;
+    bottom: calc(3.2rem + var(--safe-bottom)) !important;
     width: auto !important;
-    max-height: min(34vh, 280px);
-    overflow: hidden;
+    max-height: none;
+    padding: 0.3rem 0.55rem;
+    gap: 0.2rem;
+    border-radius: 14px;
+    background: rgba(255, 248, 251, 0.88) !important;
+  }
+
+  .side-panel-head {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .side-chevron {
+    display: inline;
+  }
+
+  .side-panel h2 {
+    font-size: 0.92rem;
+  }
+
+  /* Collapsed = title chip only (tap to open goal/truth).
+     Must beat #app.play-mode .side-panel specificity. */
+  #app.play-mode .side-panel:not(.expanded) .side-panel-body,
+  .side-panel:not(.expanded) .side-panel-body {
+    display: none;
+  }
+
+  #app.play-mode .side-panel:not(.expanded),
+  .side-panel:not(.expanded) {
+    padding: 0.4rem 0.75rem;
+    width: max-content !important;
+    max-width: calc(100% - 1rem);
+    left: 0.5rem !important;
+    right: auto !important;
+  }
+
+  #app.play-mode .side-panel:not(.expanded) .side-chevron,
+  .side-panel:not(.expanded) .side-chevron {
+    transform: rotate(180deg);
+  }
+
+  #app.play-mode .side-panel.expanded,
+  .side-panel.expanded {
+    max-height: min(40vh, 220px);
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    width: auto !important;
+  }
+
+  #app.play-mode .side-panel.expanded .side-panel-body,
+  .side-panel.expanded .side-panel-body {
+    display: flex;
+    overflow: auto;
+  }
+
+  .side-panel.expanded .side-panel-body .goal {
+    white-space: normal;
+    font-size: 0.76rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  .side-panel.expanded .side-panel-body .truth {
+    font-size: 0.66rem;
+    padding: 0.3rem 0.4rem;
+  }
+
+  .side-panel.expanded .side-panel-body .btn-secondary {
+    min-height: 32px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape: rules chip bottom-left; nav bottom-right — never cover the LED */
+@media (max-height: 520px) and (orientation: landscape) {
+  #app.play-mode .side-panel,
+  .side-panel {
+    left: 0.45rem !important;
+    right: auto !important;
+    transform: none;
+    width: auto !important;
+    bottom: calc(0.4rem + var(--safe-bottom)) !important;
+  }
+
+  .side-panel.expanded {
+    width: min(240px, 40vw) !important;
+    left: 0.45rem !important;
+    right: auto !important;
+  }
+
+  #app.play-mode .footer {
+    justify-content: flex-end;
   }
 }
 
